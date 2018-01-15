@@ -1,6 +1,13 @@
 library(Rgpu)
-
-dt = 100
+library(ggplot2)
+library(reshape2)
+library(dplyr)
+X_0 <- -2.5
+beta <- 0.7
+rho <-0.08
+q_qnorm <- qnorm(0.02)
+X_0 <- 
+dT = 100
 N = 1000
 #有効なGPUがあるか確認する
 detectGPUs()
@@ -8,7 +15,17 @@ detectGPUs()
 filter_X <- gpuMatrix(rep(0,dt*N), nrow=dt, ncol=N)
 filter_weigth <- gpuMatrix(rep(0,dt*N), nrow=dt, ncol=N)
 smoother_weight <- gpuMatrix(rep(0,dt*N), nrow=dt, ncol=N)
-Q_weight <- gpuMatrix(rep(0,dt*N), dim=c(dt, N, N))
+#Q_weight <- gpuMatrix(rep(0,dt*N), dim=c(dt, N, N))
+#sampling DDR
+r_DDR <- function(X_t, q_qnorm, rho, beta) {
+    return (q_qnorm - sqrt(rho)*sqrt(beta)*X_t) / sqrt(1 - rho) - sqrt(rho)*sqrt(1 - beta) / sqrt(1 - rho) * rnorm(1);
+  }
+
+#Dynamicdefaultrateでの密度関数　実質正規分布　DRを正規分布の逆関数で変換する必要があることに注意
+g_DR_dinamic <- function(tilde_DR, X_t_1, q_qnorm, beta, rho) {
+  return(dnorm(tilde_DR, (q_qnorm - sqrt(rho)*sqrt(beta)*X_t_1) / sqrt(1 - rho), sqrt(rho)*sqrt(1 - beta) / sqrt(1 - rho)))
+}
+
 
 #計算時間の記録用
 calc_time <- rep(0, 100)
@@ -20,11 +37,22 @@ q_qnorm_pre <- 0
 filter_X_mean <- rep(0, 100)
 smmother_X_mean <- rep(0, 100)
 predict_Y_mean <- rep(0, 100)
-
-X[0] = sqrt(beta)*X_0 + sqrt(1 - beta) * rnorm(0, 1);
-DR[0] = -2;
-for (t = 1; t < T; t++) {
-  X[t] = sqrt(beta)*X[t - 1] + sqrt(1 - beta) * rnorm(0, 1);
-  DR[t] = r_DDR(X[t - 1], q_qnorm, rho, beta);
+#Answer
+X <- rep(0,100)
+DR <- rep(0,100)
+#サンプルパスの発生
+X[1] <- sqrt(beta)*X_0 + sqrt(1 - beta) * rnorm(1)
+for (dt in 2:dT)  {
+  X[dt] = sqrt(beta)*X[dt - 1] + sqrt(1 - beta) * rnorm(1);
+  DR[dt] = r_DDR(X[dt - 1], q_qnorm, rho, beta);
 }
+DR[1] <- DR[2]*(rnorm(1)*0.05+1)
+#確認
+ggplot(data.frame(dt = seq(1, dT), X, DR = pnorm(DR)) %>% melt("dt")) +
+  geom_line(aes(x = dt, y = value, colour = variable)) +
+  facet_grid(variable~.,scales = "free") +
+  theme_bw()
+
+
+
 

@@ -46,7 +46,7 @@ ggplot(data.frame(dt = seq(1, dT), X, DR = pnorm(DR)) %>% melt("dt")) +
   theme_bw()
 
 
-weight <- g_DR_dinamic(rep(DR[1],N), pred_X, q_qnorm, beta, rho)
+
 
 
 

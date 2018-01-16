@@ -2,8 +2,8 @@ library(gpuR)
 library(ggplot2)
 library(reshape2)
 library(dplyr)
-source("script/PF_DDR.R")
-source("script/subfunctions.R")
+source("script/PF_DDR.R",encoding = "utf-8")
+source("script/subfunctions.R",encoding = "utf-8")
 
 
 X_0 <- -2.5

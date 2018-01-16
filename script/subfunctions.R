@@ -15,7 +15,7 @@ g_DR_dinamic <- function(tilde_DR, X_t_1, q_qnorm, beta, rho) {
 
 #リサンプリング関数
 resample <- function( cumsum_weight, x) {
-  return(sapply(tmp, function(x) which(x < tmp2)[1]))
+  return(sapply(x, function(y) which(y < cumsum_weight)[1]))
 }
 
 

@@ -6,17 +6,17 @@ particle_filter <- function(N, dT, beta_est, q_qnorm_est, rho_est, X_0_est, filt
     
     if(dt == 1){
       #初期分布から　時点0と考えて
-      pred_X <- gpuVector(sqrt(beta_est)*X_0_est - sqrt(1 - beta_est) * rnorm(N))
+      pred_X <- vclVector(sqrt(beta_est)*X_0_est - sqrt(1 - beta_est) * rnorm(N))
       #重みの計算
       weight <- g_DR_dinamic(DR[2], pred_X, q_qnorm, beta, rho)
     }else{
-      pred_X <- sqrt(beta_est)*prior_X - gpuVector(sqrt(1 - beta_est) * rnorm(N))
+      pred_X <- sqrt(beta_est)*prior_X - vclVector(sqrt(1 - beta_est) * rnorm(N))
       weight <- g_DR_dinamic(DR[dt + 1], pred_X, q_qnorm, beta, rho) * prior_weight
     }
     
     
     #weightの正規化 一部の計算は並列計算できないからしょうがない
-    cs_weight <- gpuVector(cumsum(weight[,]))
+    cs_weight <- vclVector(cumsum(weight[,]))
     weight <- weight / cs_weight[N]
     cs_weight <- cs_weight / cs_weight[N]
     resample_check_weight = weight^2
@@ -25,14 +25,14 @@ particle_filter <- function(N, dT, beta_est, q_qnorm_est, rho_est, X_0_est, filt
     #リサンプリング (resample)とり会えず並列にしない
     if (1 / resample_check_weight < N / 10){
       weight <- weight[]
-      weight <- gpuVector(weight[resample(cs_weight[],runif(N))])
+      weight <- vclVector(weight[resample(cs_weight[],runif(N))])
       }
     
     filter_X[dt,] <- pred_X[,]
     prior_X <- pred_X * 1
     filter_weigth[dt,] <- weight[,]
     prior_weight <- weight * 1
-    state_X_mean[dt] <- pred_X %*% weight
+    state_X_mean[dt] <- (pred_X %*% weight)[1, 1]
     }
 }
 

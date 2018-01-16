@@ -1,4 +1,4 @@
-library(Rgpu)
+library(gpuR)
 library(ggplot2)
 library(reshape2)
 library(dplyr)
@@ -6,7 +6,7 @@ X_0 <- -2.5
 beta <- 0.7
 rho <-0.08
 q_qnorm <- qnorm(0.02)
-X_0 <- 
+X_0 <- -2.5
 dT = 100
 N = 1000
 #有効なGPUがあるか確認する
@@ -23,7 +23,7 @@ r_DDR <- function(X_t, q_qnorm, rho, beta) {
 
 #Dynamicdefaultrateでの密度関数　実質正規分布　DRを正規分布の逆関数で変換する必要があることに注意
 g_DR_dinamic <- function(tilde_DR, X_t_1, q_qnorm, beta, rho) {
-  return(dnorm(tilde_DR, (q_qnorm - sqrt(rho)*sqrt(beta)*X_t_1) / sqrt(1 - rho), sqrt(rho)*sqrt(1 - beta) / sqrt(1 - rho)))
+  return(gdnorm(tilde_DR, (q_qnorm - sqrt(rho)*sqrt(beta)*X_t_1) / sqrt(1 - rho), sqrt(rho)*sqrt(1 - beta) / sqrt(1 - rho)))
 }
 
 
@@ -53,6 +53,7 @@ ggplot(data.frame(dt = seq(1, dT), X, DR = pnorm(DR)) %>% melt("dt")) +
   facet_grid(variable~.,scales = "free") +
   theme_bw()
 
+weight <- g_DR_dinamic(rep(DR[1],N), pred_X, q_qnorm, beta, rho)
 
 
 

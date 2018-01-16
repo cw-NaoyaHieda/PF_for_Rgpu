@@ -12,9 +12,9 @@ N = 1000
 #有効なGPUがあるか確認する
 detectGPUs()
 #Particle用の変数準備
-filter_X <- gpuMatrix(rep(0,dt*N), nrow=dt, ncol=N)
-filter_weigth <- gpuMatrix(rep(0,dt*N), nrow=dt, ncol=N)
-smoother_weight <- gpuMatrix(rep(0,dt*N), nrow=dt, ncol=N)
+filter_X <- gpuMatrix(rep(0,dT*N), nrow=dT, ncol=N)
+filter_weigth <- gpuMatrix(rep(0,dT*N), nrow=dT, ncol=N)
+smoother_weight <- gpuMatrix(rep(0,dT*N), nrow=dT, ncol=N)
 #Q_weight <- gpuMatrix(rep(0,dt*N), dim=c(dt, N, N))
 
 

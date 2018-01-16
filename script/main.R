@@ -16,15 +16,7 @@ filter_X <- gpuMatrix(rep(0,dt*N), nrow=dt, ncol=N)
 filter_weigth <- gpuMatrix(rep(0,dt*N), nrow=dt, ncol=N)
 smoother_weight <- gpuMatrix(rep(0,dt*N), nrow=dt, ncol=N)
 #Q_weight <- gpuMatrix(rep(0,dt*N), dim=c(dt, N, N))
-#sampling DDR
-r_DDR <- function(X_t, q_qnorm, rho, beta) {
-    return (q_qnorm - sqrt(rho)*sqrt(beta)*X_t) / sqrt(1 - rho) - sqrt(rho)*sqrt(1 - beta) / sqrt(1 - rho) * rnorm(1);
-  }
 
-#Dynamicdefaultrateでの密度関数　実質正規分布　DRを正規分布の逆関数で変換する必要があることに注意
-g_DR_dinamic <- function(tilde_DR, X_t_1, q_qnorm, beta, rho) {
-  return(gdnorm(tilde_DR, (q_qnorm - sqrt(rho)*sqrt(beta)*X_t_1) / sqrt(1 - rho), sqrt(rho)*sqrt(1 - beta) / sqrt(1 - rho)))
-}
 
 
 #計算時間の記録用
@@ -52,6 +44,7 @@ ggplot(data.frame(dt = seq(1, dT), X, DR = pnorm(DR)) %>% melt("dt")) +
   geom_line(aes(x = dt, y = value, colour = variable)) +
   facet_grid(variable~.,scales = "free") +
   theme_bw()
+
 
 weight <- g_DR_dinamic(rep(DR[1],N), pred_X, q_qnorm, beta, rho)
 

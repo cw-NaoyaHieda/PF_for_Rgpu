@@ -2,6 +2,10 @@ library(gpuR)
 library(ggplot2)
 library(reshape2)
 library(dplyr)
+source("script/PF_DDR.R")
+source("script/subfunctions.R")
+
+
 X_0 <- -2.5
 beta <- 0.7
 rho <-0.08
@@ -17,10 +21,6 @@ filter_weigth <- gpuMatrix(rep(0,dT*N), nrow=dT, ncol=N)
 smoother_weight <- gpuMatrix(rep(0,dT*N), nrow=dT, ncol=N)
 #Q_weight <- gpuMatrix(rep(0,dt*N), dim=c(dt, N, N))
 
-
-
-#計算時間の記録用
-calc_time <- rep(0, 100)
 #パラメータの一個前の値
 beta_est_pre <- 0
 rho_est_pre <- 0
@@ -47,6 +47,7 @@ ggplot(data.frame(dt = seq(1, dT), X, DR = pnorm(DR)) %>% melt("dt")) +
 
 
 
+particle_filter(N, dT, beta, q_qnorm, rho, X_0, filter_X, filter_weigth, filter_X_mean)
 
 
 

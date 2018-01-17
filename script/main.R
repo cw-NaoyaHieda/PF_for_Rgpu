@@ -5,7 +5,7 @@ library(dplyr)
 source("script/PF_DDR.R",encoding = "utf-8")
 source("script/PS_DDR.R",encoding = "utf-8")
 source("script/subfunctions.R",encoding = "utf-8")
-
+set.seed(2018)
 
 X_0 <- -2.5
 beta <- 0.75

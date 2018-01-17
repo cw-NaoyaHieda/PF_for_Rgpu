@@ -27,9 +27,9 @@ g_DR_dinamic_potencial <- function(X_t, X_t_1, beta) {
   
 }
 
-g_DR_dinamic_potencial2 <- function(X_t, X_t_1, beta) {
+g_DR_dinamic_potencial_cross <- function(X_t, X_t_1, beta) {
   
-  
-  return ((X_t - X_t_1)^2 )
-  
+  content <- log(exp( X_t ) %*%  (1/exp(sqrt(beta)*X_t_1)) )
+
+  return (1 / (sqrt(1 - beta) * sqrt(2 * pi))*exp( - content^2 / ((1 - beta) * 2)))
 }

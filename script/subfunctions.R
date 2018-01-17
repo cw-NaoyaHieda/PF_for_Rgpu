@@ -23,7 +23,13 @@ resample <- function( cumsum_weight, x) {
 g_DR_dinamic_potencial <- function(X_t, X_t_1, beta) {
   
   
-  return (1 / (sqrt(1 - beta) * sqrt(2 * pi))*exp( - (X_t -  sqrt(beta) * X_t_1)^2 / ((1 - beta)^2 * 2)))
+  return (1 / (sqrt(1 - beta) * sqrt(2 * pi))*exp( - (X_t -  sqrt(beta) * X_t_1)^2 / ((1 - beta) * 2)))
   
 }
 
+g_DR_dinamic_potencial2 <- function(X_t, X_t_1, beta) {
+  
+  
+  return ((X_t - X_t_1)^2 )
+  
+}

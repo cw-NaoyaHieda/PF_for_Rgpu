@@ -8,12 +8,12 @@ source("script/subfunctions.R",encoding = "utf-8")
 
 
 X_0 <- -2.5
-beta <- 0.7
-rho <-0.08
+beta <- 0.75
+rho <- 0.08
 q_qnorm <- qnorm(0.02)
 X_0 <- -2.5
-dT = 100
-N = 5000
+dT <- 100
+N <- 1000
 #有効なGPUがあるか確認する
 detectGPUs()
 #Particle用の変数準備

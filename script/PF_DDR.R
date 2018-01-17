@@ -24,13 +24,15 @@ particle_filter <- function(N, dT, beta_est, q_qnorm_est, rho_est, X_0_est, filt
     
     #リサンプリング (resample)とり会えず並列にしない
     if (1 / resample_check_weight < N / 10){
-      weight <- weight[]
-      weight <- vclVector(weight[resample(cs_weight[],runif(N))])
+      print(dt)
+      weight[] <- 1 / N
+      pred_X <- pred_X[]
+      pred_X <- vclVector(pred_X[resample(cs_weight[],runif(N))])
       }
     
-    filter_X[dt,] <- pred_X[,]
+    filter_X[dt,] <- pred_X[]
     prior_X <- pred_X * 1
-    filter_weigth[dt,] <- weight[,]
+    filter_weigth[dt,] <- weight[]
     prior_weight <- weight * 1
     state_X_mean[dt] <- (pred_X %*% weight)[1, 1]
     }

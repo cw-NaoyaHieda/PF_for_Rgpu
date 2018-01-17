@@ -33,3 +33,5 @@ g_DR_dinamic_potencial_cross <- function(X_t, X_t_1, beta) {
 
   return (1 / (sqrt(1 - beta) * sqrt(2 * pi))*exp( - content^2 / ((1 - beta) * 2)))
 }
+
+

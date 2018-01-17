@@ -12,8 +12,8 @@ beta <- 0.75
 rho <- 0.08
 q_qnorm <- qnorm(0.02)
 X_0 <- -2.5
-dT <- 100
-N <- 1000
+dT <- 5
+N <- 3
 #有効なGPUがあるか確認する
 detectGPUs()
 #Particle用の変数準備
@@ -21,6 +21,7 @@ filter_X <- vclMatrix(rep(0,dT*N), nrow=dT, ncol=N)
 filter_weight <- vclMatrix(rep(0,dT*N), nrow=dT, ncol=N)
 smoother_weight <- vclMatrix(rep(0,dT*N), nrow=dT, ncol=N)
 #Q_weight <- vclMatrix(rep(0,dt*N), dim=c(dt, N, N))
+Q_weight <- array(rep(0, dt * N), dim=c(dT, N, N))
 
 #パラメータの一個前の値
 beta_est_pre <- 0
@@ -54,6 +55,8 @@ particle_smoother(N, dT, beta, filter_X, filter_weight, filter_X_mean, smoother_
 ggplot(data.frame(dt = seq(1, dT), X, f_X = filter_X_mean[], s_X = smoother_X_mean[]) %>% melt("dt")) +
   geom_line(aes(x = dt, y = value, colour = variable)) +
   theme_bw()
+
+
 
 
 

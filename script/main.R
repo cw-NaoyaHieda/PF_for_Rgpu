@@ -12,8 +12,8 @@ beta <- 0.75
 rho <- 0.08
 q_qnorm <- qnorm(0.02)
 X_0 <- -2.5
-dT <- 5
-N <- 3
+dT <- 100
+N <- 1000
 #有効なGPUがあるか確認する
 detectGPUs()
 #Particle用の変数準備
@@ -21,7 +21,7 @@ filter_X <- vclMatrix(rep(0,dT*N), nrow=dT, ncol=N)
 filter_weight <- vclMatrix(rep(0,dT*N), nrow=dT, ncol=N)
 smoother_weight <- vclMatrix(rep(0,dT*N), nrow=dT, ncol=N)
 #Q_weight <- vclMatrix(rep(0,dt*N), dim=c(dt, N, N))
-Q_weight <- array(rep(0, dt * N), dim=c(dT, N, N))
+Q_weight <- array(rep(0, dT * N), dim=c(dT, N, N))
 
 #パラメータの一個前の値
 beta_est_pre <- 0
